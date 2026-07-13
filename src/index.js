@@ -1,12 +1,11 @@
 require('dotenv').config();
 
-const cron                        = require('node-cron');
 const { fetchAllFeeds }           = require('./newsFetcher');
 const { filterArticles }          = require('./newsFilter');
 const { sendArticleToSharePoint } = require('./sharePointWriter');
 const server                      = require('./server');
 
-const CRON_EVERY_HOUR = '0 * * * *';
+const INTERVAL_48_HOURS_MS = 48 * 60 * 60 * 1000;
 
 const feedUrls = process.env.RSS_FEEDS.split(',').map((url) => url.trim());
 const keywords = process.env.RSS_KEYWORDS.split(',').map((kw) => kw.trim());
@@ -45,6 +44,6 @@ server.start();
 
 run();
 
-cron.schedule(CRON_EVERY_HOUR, run);
+setInterval(run, INTERVAL_48_HOURS_MS);
 
-log('Agendador ativo — próxima execução no início da próxima hora.');
+log('Agendador ativo — próxima execução em 48 horas.');
