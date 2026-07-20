@@ -1,6 +1,7 @@
 function matchesKeyword(article, lowerKeywords) {
   const title = (article.title || '').toLowerCase();
-  return lowerKeywords.some((keyword) => title.includes(keyword));
+  const summary = (article.summary || '').toLowerCase();
+  return lowerKeywords.some((keyword) => title.includes(keyword) || summary.includes(keyword));
 }
 
 // Filtro puro (sem estado): mantém artigos cujo título contém alguma palavra-chave
