@@ -1,7 +1,7 @@
 const { fetchAllFeeds } = require('../src/newsFetcher');
 const { filterArticles } = require('../src/newsFilter');
 const { sendArticleToSharePoint, getExistingLinks } = require('../src/sharePointWriter');
-const { getFeedUrls, getKeywords } = require('../src/config');
+const { getFeedUrls, getKeywords, getExcludeKeywords } = require('../src/config');
 
 function log(message) {
   console.log(`[${new Date().toISOString()}] [cron] ${message}`);
@@ -20,12 +20,13 @@ module.exports = async (req, res) => {
   try {
     const feedUrls = getFeedUrls();
     const keywords = getKeywords();
+    const excludeKeywords = getExcludeKeywords();
 
     log('Iniciando ciclo de busca...');
 
     const allArticles = await fetchAllFeeds(feedUrls);
     const existingLinks = await getExistingLinks();
-    const articles = filterArticles(allArticles, keywords, existingLinks);
+    const articles = filterArticles(allArticles, keywords, existingLinks, excludeKeywords);
 
     log(`${allArticles.length} artigos encontrados, ${articles.length} novos para enviar.`);
 

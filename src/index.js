@@ -3,13 +3,14 @@ require('dotenv').config();
 const { fetchAllFeeds }           = require('./newsFetcher');
 const { filterArticles }          = require('./newsFilter');
 const { sendArticleToSharePoint } = require('./sharePointWriter');
-const { getFeedUrls, getKeywords } = require('./config');
+const { getFeedUrls, getKeywords, getExcludeKeywords } = require('./config');
 const server                      = require('./server');
 
 const INTERVAL_48_HOURS_MS = 48 * 60 * 60 * 1000;
 
 const feedUrls = getFeedUrls();
 const keywords = getKeywords();
+const excludeKeywords = getExcludeKeywords();
 
 function log(message) {
   console.log(`[${new Date().toISOString()}] ${message}`);
@@ -28,7 +29,7 @@ async function run() {
   log('Iniciando ciclo de busca...');
 
   const allArticles      = await fetchAllFeeds(feedUrls);
-  const filteredArticles = filterArticles(allArticles, keywords);
+  const filteredArticles = filterArticles(allArticles, keywords, new Set(), excludeKeywords);
 
   log(`${allArticles.length} artigos encontrados, ${filteredArticles.length} para enviar.`);
 

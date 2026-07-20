@@ -11,4 +11,8 @@ function getKeywords() {
   return parseList(process.env.RSS_KEYWORDS);
 }
 
-module.exports = { parseList, getFeedUrls, getKeywords };
+function getExcludeKeywords() {
+  return parseList(process.env.RSS_EXCLUDE_KEYWORDS);
+}
+
+module.exports = { parseList, getFeedUrls, getKeywords, getExcludeKeywords };
