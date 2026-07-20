@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/view-formatting.schema.json",
+  "hideSelection": true,
+  "hideColumnHeader": true,
+  "rowFormatter": {
+    "elmType": "div",
+    "attributes": {
+      "class": "sp-css-borderColor-neutralLight"
+    },
+    "style": {
+      "background-color": "white",
+      "border-radius": "8px",
+      "box-shadow": "0 1px 4px rgba(0,0,0,0.08)",
+      "padding": "20px 24px",
+      "margin-bottom": "16px",
+      "display": "flex",
+      "flex-direction": "column",
+      "gap": "8px"
+    },
+    "children": [
+      {
+        "elmType": "a",
+        "txtContent": "[$Title]",
+        "attributes": {
+          "target": "_blank",
+          "href": "[$Link]"
+        },
+        "style": {
+          "font-size": "16px",
+          "font-weight": "600",
+          "color": "#0078d4",
+          "text-decoration": "none",
+          "line-height": "1.4"
+        }
+      },
+      {
+        "elmType": "p",
+        "txtContent": "[$Resumo]",
+        "style": {
+          "font-size": "14px",
+          "color": "#555555",
+          "line-height": "1.6",
+          "margin": "0"
+        }
+      },
+      {
+        "elmType": "span",
+        "txtContent": "[$DataPublicacao]",
+        "style": {
+          "font-size": "12px",
+          "color": "#999999"
+        }
+      }
+    ]
+  }
+}

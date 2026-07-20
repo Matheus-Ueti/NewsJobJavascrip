@@ -1,26 +1,21 @@
-const sentLinks = new Set();
-
-function containsKeyword(article, keywords) {
-  const title = article.title.toLowerCase();
-  return keywords.some((keyword) => title.includes(keyword));
+function matchesKeyword(article, lowerKeywords) {
+  const title = (article.title || '').toLowerCase();
+  return lowerKeywords.some((keyword) => title.includes(keyword));
 }
 
-function isNew(article) {
-  return !sentLinks.has(article.link);
-}
-
-function markAsSent(article) {
-  sentLinks.add(article.link);
-}
-
-function filterArticles(articles, keywords) {
+// Filtro puro (sem estado): mantém artigos cujo título contém alguma palavra-chave
+// e remove duplicatas pelo link. Seguro para invocações serverless reutilizadas.
+function filterArticles(articles, keywords, excludeLinks = new Set()) {
   const lowerKeywords = keywords.map((k) => k.toLowerCase());
+  const seen = new Set();
 
   return articles.filter((article) => {
-    if (!isNew(article))                          return false;
-    if (!containsKeyword(article, lowerKeywords)) return false;
+    const link = article.link || '';
+    if (link && seen.has(link)) return false;
+    if (link && excludeLinks.has(link)) return false;
+    if (!matchesKeyword(article, lowerKeywords)) return false;
 
-    markAsSent(article);
+    if (link) seen.add(link);
     return true;
   });
 }

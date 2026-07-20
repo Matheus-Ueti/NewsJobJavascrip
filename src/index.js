@@ -3,12 +3,13 @@ require('dotenv').config();
 const { fetchAllFeeds }           = require('./newsFetcher');
 const { filterArticles }          = require('./newsFilter');
 const { sendArticleToSharePoint } = require('./sharePointWriter');
+const { getFeedUrls, getKeywords } = require('./config');
 const server                      = require('./server');
 
 const INTERVAL_48_HOURS_MS = 48 * 60 * 60 * 1000;
 
-const feedUrls = process.env.RSS_FEEDS.split(',').map((url) => url.trim());
-const keywords = process.env.RSS_KEYWORDS.split(',').map((kw) => kw.trim());
+const feedUrls = getFeedUrls();
+const keywords = getKeywords();
 
 function log(message) {
   console.log(`[${new Date().toISOString()}] ${message}`);

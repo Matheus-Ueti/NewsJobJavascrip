@@ -19,6 +19,35 @@ function buildRequestBody(article) {
   };
 }
 
+// Busca os links já cadastrados na lista para evitar duplicatas entre execuções.
+// Em caso de falha (ex.: nome de campo diferente), retorna um Set vazio e loga o erro,
+// para nunca derrubar o ciclo de envio.
+async function getExistingLinks() {
+  try {
+    const token = await getAccessToken();
+    const url = `${buildListItemUrl()}?expand=fields(select=Link)&$top=500`;
+
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      console.error(`[sharePointWriter] Falha ao listar itens: ${response.status}`);
+      return new Set();
+    }
+
+    const data = await response.json();
+    const links = (data.value || [])
+      .map((item) => item.fields && item.fields.Link)
+      .filter(Boolean);
+
+    return new Set(links);
+  } catch (error) {
+    console.error(`[sharePointWriter] Erro ao buscar links existentes: ${error.message}`);
+    return new Set();
+  }
+}
+
 async function sendArticleToSharePoint(article) {
   const token = await getAccessToken();
 
@@ -39,4 +68,4 @@ async function sendArticleToSharePoint(article) {
   return response.json();
 }
 
-module.exports = { sendArticleToSharePoint };
+module.exports = { sendArticleToSharePoint, getExistingLinks };
